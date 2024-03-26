@@ -14,6 +14,18 @@ dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
 
+app.use((req,res,next)=>{
+    const origin = req.headers.origin;
+    if (process.env.allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin,X-Requested-With,Content-Type,Accept"
+    );
+    next();
+})
+
 //routing rhe api
 app.use("/api/auth", authRoutes); //mounting the route on /api
 app.use("/api/messages", messageRoutes);
